@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """Test console"""
-
 import os
 import uuid
 import unittest
@@ -13,8 +12,9 @@ from console import HBNBCommand
 
 
 class TestHBNBCommand(unittest.TestCase):
-	"""Unittesting the HBNB Command interpreter"""
-@classmethod
+    """Unittesting the HBNB command interpreter"""
+
+    @classmethod
     def setUpClass(test_cls):
         try:
             os.rename("file.json", "tmp_file")
@@ -22,7 +22,7 @@ class TestHBNBCommand(unittest.TestCase):
             pass
         test_cls.HBNB = HBNBCommand()
 
-@classmethod
+    @classmethod
     def tearDownClass(test_cls):
         try:
             os.rename("tmp_file", "file.json")
@@ -32,16 +32,16 @@ class TestHBNBCommand(unittest.TestCase):
         if type(models.storage) == DBStorage:
             models.storage._DBStorage__session.close()
 
-def setUp(self):
+    def setUp(self):
         FileStorage._FileStorage__objects = {}
 
-def tearDown(self):
+    def tearDown(self):
         try:
             os.remove("file.json")
         except IOError:
             pass
 
-@unittest.skipIf(type(models.storage) == DBStorage, "Testing DBstorage")
+    @unittest.skipIf(type(models.storage) == DBStorage, "Testing DBstorage")
     def test_create(self):
         with patch("sys.stdout", new=StringIO()) as test:
             self.HBNB.onecmd("create BaseMOdel")
@@ -64,5 +64,45 @@ def tearDown(self):
         with patch("sys.stdout", new=StringIO()) as test:
             self.HBNB.onecmd("create Amenity")
             new_amenity = test.getvalue().strip()
-if __name__ = '__main__':
-	unittest.main()
+
+    @unittest.skipIf(type(models.storage) == DBStorage, "Testing DBStorage")
+    def test_all(self):
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all BaseMOdel")
+            new_bm = test.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all State")
+            new_state = test.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all User")
+            new_user = test.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all City")
+            new_city = test.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all Place")
+            new_place = test.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all Review")
+            new_review = test.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all Amenity")
+            new_amenity = test.getvalue().strip()
+
+    @unittest.skipIf(type(models.storage) == DBStorage, "Testing DBstorage")
+    def test_create_kwargs(self):
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd('create User first_name="John" email="john@example.com password="1234"')
+            new_user = test.getvalue().strip()
+        with patch("sys.stdout", new=StringIO()) as test:
+            self.HBNB.onecmd("all User")
+            user_output = test.getvalue()
+            self.assertIn(new_user, user_output)
+            self.assertIn("'first_name': 'John'", user_output)
+            self.assertIn("'email': 'john@example.com'", user_output)
+            self.assertNotIn("'last_name': 'Snow'", user_output)
+            self.assertIn("'password': '1234'", user_output)
+
+
+if __name__ == '__main__':
+    unittest.main()
