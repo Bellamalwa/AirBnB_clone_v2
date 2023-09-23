@@ -13,7 +13,7 @@ from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
-   """ Contains the functionality for the HBNB console"""
+    """Contains the functionality for the HBNB console"""
 
     # determines prompt for interactive/non-interactive modes
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
@@ -134,7 +134,8 @@ class HBNBCommand(cmd.Cmd):
                     value[1] = value[1][:len(value[1]) - 1] + ""
                 # replace '_' with space
                 value[1] = value[1].replace("_", " ")
-                # check if the string can be converted to number if yes convert
+                #check if the string can be converted to number if yes
+ convert
                 if value[1].isnumeric():
                     if int(value[1]):
                         value[1] = int(value[1])
@@ -234,7 +235,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del (storage.all()[key])
+            del(storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
